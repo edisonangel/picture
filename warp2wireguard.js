@@ -1,7 +1,6 @@
-// Original link: https://github.com/yyuueexxiinngg/some-scripts/blob/master/cloudflare/warp2wireguard.js
-const publicKey = "Put your WireGuard public key here";
-const privateKey = "Put your WireGuard private key here";
-const referrer = "Must put referrer id here to get start with 1 GB";
+const publicKey = "WireGuard公钥复制到这里";
+const privateKey = "WireGuard私钥复制到这里";
+const referrer = "复制一个aff id到这里";
 
 if (
   !publicKey.endsWith("=") ||
@@ -10,9 +9,7 @@ if (
     referrer
   )
 ) {
-  console.error(
-    "Please specify WireGuard private key, public key and referrer id"
-  );
+  console.error("请正确填写密钥和aff id");
   process.exit(1);
 }
 
@@ -37,19 +34,19 @@ async function run() {
   }
 
   if (!warpConf.id) {
-    console.log("No ID found, registering...");
+    console.log("未读取到保存信息, 正在注册新帐号中...");
     userData = await reg();
-    console.log("Successfully registered:");
+    console.log("注册成功:");
     console.log(util.inspect(userData, false, null, true));
   } else {
-    console.log("Getting user data...");
+    console.log("正在获取用户信息...");
     const res = await getInfo(warpConf.id, warpConf.token);
     userData = res.result;
-    console.log("Successfully fetched data:");
+    console.log("成功获取用户信息:");
     if (process.argv[2] && process.argv[2] === "q") {
       console.log(
         "\x1b[36m%s\x1b[0m",
-        "BANDWIDTH LEFT:",
+        "剩余流量:",
         userData.account.quota / 1000000000,
         "GB"
       );
@@ -78,11 +75,11 @@ AllowedIPs = 0.0.0.0/0
   console.log(wireGuardConf);
   fs.writeFileSync("./wireguard-cloudflare-warp.conf", wireGuardConf);
   console.log(
-    "Config saved, check wireguard-cloudflare-warp.conf in current dir."
+    "配置文件成功保存到当前运行文件夹 wireguard-cloudflare-warp.conf"
   );
   console.log(
     "\x1b[36m%s\x1b[0m",
-    "BANDWIDTH LEFT:",
+    "剩余流量:",
     userData.account.quota / 1000000000,
     "GB"
   );
@@ -109,7 +106,7 @@ async function getInfo(id, token) {
       const data = result.payload;
       resolve(data);
     } else {
-      console.error("Unable to get user info.");
+      console.error("获取用户信息失败.");
       process.exit(1);
     }
   });
@@ -155,7 +152,7 @@ async function reg() {
 
       resolve(data);
     } else {
-      console.error("Unable to register new account.");
+      console.error("注册帐号失败.");
       process.exit(1);
     }
   });
